@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from "next/server";
 import Worker, { IWorker } from "../models/worker";
 import { catchAsyncErrors } from "../middlewares/catchAsyncErrors";
 import APIFilters from "../utils/apiFilters";
+import ErrorHandler from "../utils/errorHandle";
 
 // Get all workers  =>  /api/workers
 export const allWorkers = catchAsyncErrors(async (req: NextRequest) => {
@@ -9,12 +10,14 @@ export const allWorkers = catchAsyncErrors(async (req: NextRequest) => {
 
   const { searchParams } = new URL(req.url);
 
+  throw new ErrorHandler("hello",400);
+
   const queryStr: any = {};
   searchParams.forEach((value, key) => {
     queryStr[key] = value;
   });
 
-  const workersCount: number = await Worker.countDocuments();
+  //const workersCount: number = await Worker.countDocuments();
 
   const apiFilters = new APIFilters(Worker, queryStr).search().filter();
 
@@ -26,7 +29,7 @@ export const allWorkers = catchAsyncErrors(async (req: NextRequest) => {
 
   return NextResponse.json({
     success: true,
-    workersCount,
+    //workersCount,
     filteredWorkersCount,
     resPerPage,
     workers,
