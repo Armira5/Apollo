@@ -1,5 +1,5 @@
 import mongoose, { Document, Schema } from "mongoose";
-// import bcrypt from "bcryptjs";
+import bcrypt from "bcryptjs";
 // import * as crypto from "crypto";
 
 export interface IUser extends Document {
@@ -51,13 +51,13 @@ const userSchema: Schema<IUser> = new mongoose.Schema({
 });
 
 // Encrypting password before saving the user
-// userSchema.pre("save", async function (next) {
-//   if (!this.isModified("password")) {
-//     next();
-//   }
+userSchema.pre("save", async function (next) {
+  if (!this.isModified("password")) {
+    next();
+  }
 
-//this.password = await bcrypt.hash(this.password, 10);
-//});
+  this.password = await bcrypt.hash(this.password, 10);
+});
 
 // Compare user password
 // userSchema.methods.comparePassword = async function (
